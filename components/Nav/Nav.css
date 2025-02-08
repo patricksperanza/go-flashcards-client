@@ -26,6 +26,8 @@
 }
 
 .login {
+  display: flex;
+  align-items: center;
   border: 2px solid #eee;
   border-radius: 0.5rem;
   box-sizing: border-box;
