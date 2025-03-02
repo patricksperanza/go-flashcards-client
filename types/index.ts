@@ -11,4 +11,15 @@ interface User {
   email: string;
 }
 
-export type { GCResponse, User };
+interface Credentials {
+  email: string;
+  password: string;
+}
+
+interface AuthContextType {
+  login(inputs: Credentials): Promise<GCResponse<User>>;
+  logout(): void;
+  currentUser: User | null;
+}
+
+export type { GCResponse, User, AuthContextType, Credentials };

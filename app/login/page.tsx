@@ -1,37 +1,27 @@
 "use client";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { GCResponse, User } from "@/types";
+import { AuthContext } from "@/context/authContext";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const router = useRouter();
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     try {
-      const result = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-
-      const response: GCResponse<User> = await result.json();
+      const response = await login({ email, password });
       if (!response.IsOK) {
         setError(response.Message);
-        return;
+      } else {
+        router.push("/dashboard");
       }
-      console.log("User=", response.Payload);
-      router.push("/dashboard");
     } catch (error) {
-      console.error("Login error:", error);
-      setError("Login failed");
+      console.error(error);
+      setError("Login Failed");
     }
   };
 
